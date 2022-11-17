@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/Fermekoo/game-store/utils"
 )
@@ -18,13 +19,13 @@ type VIPPayment struct {
 	config     utils.Config
 }
 
-func NewVIPPayment(config utils.Config) *VIPPayment {
+func NewVIPPayment(config utils.Config) ApiGameInterface {
 	return &VIPPayment{
 		config: config,
 	}
 }
 
-func (vip VIPPayment) callApi(path string, payload *bytes.Buffer) *http.Response {
+func (vip *VIPPayment) callApi(path string, payload *bytes.Buffer) *http.Response {
 	var client = &http.Client{}
 	url := vip.config.VIPBaseURL + path
 
@@ -41,15 +42,15 @@ func (vip VIPPayment) callApi(path string, payload *bytes.Buffer) *http.Response
 	return response
 }
 
-func (vip VIPPayment) generateSign() string {
+func (vip *VIPPayment) generateSign() string {
 	hash := md5.New()
 	hash.Write([]byte(vip.config.VIPApiID + vip.config.VIPApiKey))
 	sign := hex.EncodeToString(hash.Sum(nil))
 	return sign
 }
 
-func (vip VIPPayment) Profile() (ProfileResponse, error) {
-
+func (vip *VIPPayment) Profile() (ProfileResponse, error) {
+	time.Sleep(5 * time.Second)
 	var profileResponse ProfileResponse
 	var param = url.Values{}
 	sign := vip.generateSign()
@@ -65,7 +66,7 @@ func (vip VIPPayment) Profile() (ProfileResponse, error) {
 	return profileResponse, err
 }
 
-func (vip VIPPayment) Order(payload OrderCall) (OrderResponse, error) {
+func (vip *VIPPayment) Order(payload OrderCall) (OrderResponse, error) {
 	var orderResponse OrderResponse
 	var param = url.Values{}
 	sign := vip.generateSign()
@@ -85,7 +86,7 @@ func (vip VIPPayment) Order(payload OrderCall) (OrderResponse, error) {
 	return orderResponse, err
 }
 
-func (vip VIPPayment) ListService(filter FilterListService) (ServiceResponse, error) {
+func (vip *VIPPayment) ListService(filter FilterListService) (ServiceResponse, error) {
 	var listService ServiceResponse
 	param := url.Values{}
 	sign := vip.generateSign()
@@ -107,7 +108,7 @@ func (vip VIPPayment) ListService(filter FilterListService) (ServiceResponse, er
 	return listService, err
 }
 
-func (vip VIPPayment) Game() ([]GameResponse, error) {
+func (vip *VIPPayment) Game() ([]GameResponse, error) {
 	var filter FilterListService
 	listServices, _ := vip.ListService(filter)
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/Fermekoo/game-store/api"
@@ -15,13 +16,10 @@ func main() {
 	}
 
 	service := pkg.NewVIPPayment(config)
-	server, err := api.NewServer(service)
+	server := api.NewServer(service)
 	if err != nil {
 		log.Fatal("cannot create server", err)
 	}
 
-	err = server.Start(config.ServerAddress)
-	if err != nil {
-		log.Fatal("cannot start server", err)
-	}
+	server.Start(config.ServerAddress, context.Background())
 }
