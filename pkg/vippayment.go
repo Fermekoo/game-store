@@ -114,7 +114,7 @@ func (vip VIPPayment) Game() ([]GameResponse, error) {
 	data := listServices.Data
 
 	buckets := map[string]GameResponse{}
-
+	outputs := []GameResponse{}
 	for _, v := range data {
 		out, exists := buckets[v.Game]
 		if !exists {
@@ -122,16 +122,8 @@ func (vip VIPPayment) Game() ([]GameResponse, error) {
 				Name: v.Game,
 			}
 			buckets[v.Game] = out
-		} else {
-			continue
+			outputs = append(outputs, out)
 		}
 	}
-
-	outputs := []GameResponse{}
-
-	for _, bucket := range buckets {
-		outputs = append(outputs, bucket)
-	}
-
 	return outputs, nil
 }
