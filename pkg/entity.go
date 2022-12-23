@@ -1,5 +1,10 @@
 package pkg
 
+type GeneralResponse struct {
+	Result  bool        `json:"result"`
+	Data    interface{} `json:"data"`
+	Message string      `json:"message"`
+}
 type ProfileResponse struct {
 	Result  bool        `json:"result"`
 	Data    DataProfile `json:"data"`
@@ -22,7 +27,7 @@ type OrderCall struct {
 }
 type OrderCallRequest struct {
 	ServiceCode string `json:"service" binding:"required"`
-	AccountID   uint64 `json:"account_id" binding:"required"`
+	AccountID   string `json:"account_id" binding:"required"`
 	AccountZone string `json:"account_zone"`
 }
 
@@ -43,10 +48,15 @@ type DataOrder struct {
 	Price       string `json:"price"`
 }
 
-type ServiceResponse struct {
+type ListServiceResponse struct {
 	Result  bool              `json:"result"`
 	Data    []DataServiceGame `json:"data"`
 	Message string            `json:"message"`
+}
+type DetailServiceResponse struct {
+	Result  bool            `json:"result"`
+	Data    DataServiceGame `json:"data"`
+	Message string          `json:"message"`
 }
 
 type DataServiceGame struct {

@@ -12,6 +12,7 @@ type Config struct {
 	VIPApiID      string `mapstructure:"VIP_API_ID"`
 	VIPApiKey     string `mapstructure:"VIP_API_KEY"`
 	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
+	ServiceFee    uint   `mapstructure:"SERVICE_FEE"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

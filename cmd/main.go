@@ -16,7 +16,7 @@ func main() {
 	}
 
 	service := pkg.NewVIPPayment(config)
-	server := api.NewServer(service)
+	server := api.NewServer(service, config)
 	if err != nil {
 		log.Fatal("cannot create server", err)
 	}

@@ -15,11 +15,10 @@ import (
 )
 
 type VIPPayment struct {
-	VIPPayment ApiGameInterface
-	config     utils.Config
+	config utils.Config
 }
 
-func NewVIPPayment(config utils.Config) ApiGameInterface {
+func NewVIPPayment(config utils.Config) *VIPPayment {
 	return &VIPPayment{
 		config: config,
 	}
@@ -86,8 +85,8 @@ func (vip *VIPPayment) Order(payload OrderCall) (OrderResponse, error) {
 	return orderResponse, err
 }
 
-func (vip *VIPPayment) ListService(filter FilterListService) (ServiceResponse, error) {
-	var listService ServiceResponse
+func (vip *VIPPayment) ListService(filter FilterListService) (ListServiceResponse, error) {
+	var listService ListServiceResponse
 	param := url.Values{}
 	sign := vip.generateSign()
 
@@ -106,6 +105,29 @@ func (vip *VIPPayment) ListService(filter FilterListService) (ServiceResponse, e
 	err := json.NewDecoder(response.Body).Decode(&listService)
 
 	return listService, err
+}
+
+func (vip *VIPPayment) DetailService(service_code string) (DetailServiceResponse, error) {
+	var detailService DetailServiceResponse
+	get_services, err := vip.ListService(FilterListService{})
+	if err != nil {
+		return detailService, err
+	}
+
+	services := get_services.Data
+	var detail_service DataServiceGame
+	for _, service := range services {
+		if service.Code == service_code {
+			detail_service = service
+			break
+		}
+	}
+
+	detailService.Message = "detail service"
+	detailService.Result = get_services.Result
+	detailService.Data = detail_service
+
+	return detailService, nil
 }
 
 func (vip *VIPPayment) Game() ([]GameResponse, error) {

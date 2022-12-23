@@ -10,17 +10,20 @@ import (
 	"time"
 
 	"github.com/Fermekoo/game-store/pkg"
+	"github.com/Fermekoo/game-store/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
 	router  *gin.Engine
 	service pkg.ApiGameInterface
+	config  utils.Config
 }
 
-func NewServer(service pkg.ApiGameInterface) *Server {
+func NewServer(service pkg.ApiGameInterface, config utils.Config) *Server {
 	server := &Server{
 		service: service,
+		config:  config,
 	}
 	server.SetupRouter()
 	return server
@@ -37,6 +40,7 @@ func (server *Server) SetupRouter() {
 	router.GET("/profile", server.profile)
 	router.POST("/order", server.order)
 	router.GET("/game-service", server.services)
+	router.GET("/game-service/:code", server.detailService)
 	router.GET("/game", server.games)
 	server.router = router
 }
@@ -76,5 +80,13 @@ func (server *Server) Start(address string, ctx context.Context) {
 func errorResponse(err error) gin.H {
 	return gin.H{
 		"error": err.Error(),
+	}
+}
+
+func succesResponse(status bool, message string, data interface{}) interface{} {
+	return &pkg.GeneralResponse{
+		Result:  status,
+		Message: message,
+		Data:    data,
 	}
 }
