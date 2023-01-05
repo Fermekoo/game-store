@@ -11,6 +11,7 @@ import (
 
 	"github.com/Fermekoo/game-store/pkg"
 	"github.com/Fermekoo/game-store/utils"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,6 +37,15 @@ func (server *Server) SetupRouter() {
 			"message": "game store api",
 		})
 	})
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "PUT", "PATCH", "DELETE", "POST", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	router.GET("/profile", server.profile)
 	router.POST("/order", server.order)
