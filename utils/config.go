@@ -12,7 +12,8 @@ type Config struct {
 	VIPBaseURL        string `mapstructure:"VIP_BASE_URL"`
 	VIPApiID          string `mapstructure:"VIP_API_ID"`
 	VIPApiKey         string `mapstructure:"VIP_API_KEY"`
-	ServerAddress     string `mapstructure:"SERVER_ADDRESS"`
+	HTTPServerAddress string `mapstructure:"HTTP_SERVER_ADDRESS"`
+	GRPCServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
 	ServiceFee        uint   `mapstructure:"SERVICE_FEE"`
 	MidtransServerKey string `mapstructure:"MIDTRANS_SERVER_KEY"`
 }

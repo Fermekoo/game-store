@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message Order {
+    uint32 order_id = 1;
+	string ServiceCode = 2;
+	string AccountId = 3;
+	string AccountZone = 4;
+	uint32 TotalPrice = 5;
+	uint32 Price = 6;
+	uint32 Fee = 7;
+	string Status = 8;
+	google.protobuf.Timestamp CreatedAt = 9;
+	google.protobuf.Timestamp UpdatedAt = 10;
+}
