@@ -5,6 +5,7 @@ import (
 
 	"github.com/Fermekoo/game-store/db"
 	"github.com/Fermekoo/game-store/pb"
+	"github.com/Fermekoo/game-store/pkg"
 	"github.com/Fermekoo/game-store/repositories/order"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -78,6 +79,48 @@ func (server *Server) Profile(ctx context.Context, request *emptypb.Empty) (*pb.
 		Result:  profile.Result,
 		Message: profile.Message,
 		Data:    pb_profile,
+	}
+
+	return response, nil
+}
+
+func (server *Server) Service(ctx context.Context, request *pb.ServiceRequest) (*pb.ServiceResponse, error) {
+
+	var pb_list []*pb.Service
+	filter := pkg.FilterListService{
+		FilterType:  "game",
+		FilterValue: request.GetGame(),
+	}
+
+	list, err := server.service.ListService(filter)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get services %s", err)
+	}
+
+	for _, service := range list.Data {
+
+		pb_service_price := &pb.Price{
+			Basic:   uint32(service.Price.Basic),
+			Premium: uint32(service.Price.Premium),
+			Special: uint32(service.Price.Special),
+		}
+
+		pb_service := &pb.Service{
+			Code:         service.Code,
+			Game:         service.Game,
+			Name:         service.Name,
+			Server:       service.Server,
+			Status:       service.Status,
+			ServicePrice: pb_service_price,
+		}
+
+		pb_list = append(pb_list, pb_service)
+	}
+
+	response := &pb.ServiceResponse{
+		Result:  list.Result,
+		Message: list.Message,
+		Data:    pb_list,
 	}
 
 	return response, nil

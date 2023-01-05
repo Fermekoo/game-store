@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+import "game_service.proto";
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message ServiceRequest {
+    string game = 1;
+}
+
+message ServiceResponse {
+    bool result = 1;
+    string message = 2;
+    repeated Service data = 3;
+}

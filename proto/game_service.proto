@@ -1,0 +1,20 @@
+syntax ="proto3";
+
+package pb;
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message Price {
+    uint32 basic = 1;
+    uint32 premium = 2;
+    uint32 special = 3;
+}
+
+message Service {
+    string code = 1;
+    string game = 2;
+    string name = 3;
+    string server = 4;
+    string status = 5;
+    Price service_price = 6;
+}
