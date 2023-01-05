@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package pb;
+
+import "rpc_create_order.proto";
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+service GameStore {
+    rpc Order (OrderCallRequest) returns (OrderResponse) {}
+}

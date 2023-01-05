@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+import "order.proto";
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message OrderCallRequest {
+    string service = 1;
+    string account_id = 2;
+    string account_zone = 3;
+}
+
+message OrderResponse {
+    Order order = 1;
+}
