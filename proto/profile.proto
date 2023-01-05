@@ -1,0 +1,14 @@
+syntax ="proto3";
+
+package pb;
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message Profile {
+    string fullname = 1;
+    string username = 2;
+    uint64 balance = 3;
+    uint64 point = 4;
+    string level = 5;
+    string registered = 6;
+}

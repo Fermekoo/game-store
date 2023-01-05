@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package pb;
+
+import "profile.proto";
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message ProfileResponse {
+    bool result = 1;
+    string message = 2;
+    Profile data = 3;
+}

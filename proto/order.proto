@@ -8,13 +8,13 @@ option go_package = "github.com/Fermekoo/game-store/pb";
 
 message Order {
     uint32 order_id = 1;
-	string ServiceCode = 2;
-	string AccountId = 3;
-	string AccountZone = 4;
-	uint32 TotalPrice = 5;
-	uint32 Price = 6;
-	uint32 Fee = 7;
-	string Status = 8;
-	google.protobuf.Timestamp CreatedAt = 9;
-	google.protobuf.Timestamp UpdatedAt = 10;
+	string service_code = 2;
+	string account_id = 3;
+	string account_zone = 4;
+	uint32 total_price = 5;
+	uint32 price = 6;
+	uint32 fee = 7;
+	string status = 8;
+	google.protobuf.Timestamp created_at = 9;
+	google.protobuf.Timestamp updated_at = 10;
 }

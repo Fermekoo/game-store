@@ -32,9 +32,9 @@ type OrderCallRequest struct {
 }
 
 type OrderResponse struct {
-	Result  bool      `json:"result"`
-	Data    DataOrder `json:"data"`
-	Message string    `json:"message"`
+	Result  bool       `json:"result"`
+	Data    *DataOrder `json:"data"`
+	Message string     `json:"message"`
 }
 
 type DataOrder struct {
