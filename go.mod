@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
 	github.com/spf13/viper v1.14.0
