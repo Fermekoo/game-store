@@ -3,7 +3,7 @@ package order
 import "gorm.io/gorm"
 
 type OrderInterface interface {
-	Create(payload *Order) error
+	Create(payload *Order) (Order, error)
 }
 
 type OrderRepo struct {
@@ -14,6 +14,8 @@ func NewOrder(db *gorm.DB) *OrderRepo {
 	return &OrderRepo{db: db}
 }
 
-func (or *OrderRepo) Create(payload *Order) error {
-	return or.db.Create(&payload).Error
+func (or *OrderRepo) Create(payload *Order) (Order, error) {
+	err := or.db.Create(&payload).Error
+
+	return *payload, err
 }

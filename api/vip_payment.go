@@ -42,17 +42,17 @@ func (server *Server) order(ctx *gin.Context) {
 		TotalPrice:  total_price,
 		Fee:         fee,
 		Price:       price,
-		Status:      "pending",
+		Status:      order.Pending,
 	}
 
-	err = order_repo.Create(order_payload)
+	order, err := order_repo.Create(order_payload)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, succesResponse(true, "success create order", nil))
+	ctx.JSON(http.StatusOK, succesResponse(true, "success create order", order))
 }
 
 func (server *Server) services(ctx *gin.Context) {

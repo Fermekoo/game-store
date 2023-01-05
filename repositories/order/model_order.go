@@ -2,6 +2,12 @@ package order
 
 import "time"
 
+const (
+	Pending string = "pending"
+	Cancel  string = "cancel"
+	Sucess  string = "success"
+)
+
 type Order struct {
 	ID          uint `gorm:"primaryKey" json:"order_id"`
 	ServiceCode string
