@@ -60,7 +60,7 @@ func (server *Server) Order(ctx context.Context, request *pb.OrderCallRequest) (
 	return response, nil
 }
 
-func (server *Server) Profile(ctx context.Context, request *emptypb.Empty) (*pb.ProfileResponse, error) {
+func (server *Server) Profile(ctx context.Context, _ *emptypb.Empty) (*pb.ProfileResponse, error) {
 	profile, err := server.service.Profile()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get profile %s", err)
@@ -121,6 +121,30 @@ func (server *Server) Service(ctx context.Context, request *pb.ServiceRequest) (
 		Result:  list.Result,
 		Message: list.Message,
 		Data:    pb_list,
+	}
+
+	return response, nil
+}
+
+func (server *Server) Game(ctx context.Context, _ *emptypb.Empty) (*pb.GameResponse, error) {
+	games, err := server.service.Game()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get game %s", err)
+	}
+
+	var pb_games []*pb.Game
+	for _, game := range games {
+		game := &pb.Game{
+			Name: game.Name,
+		}
+
+		pb_games = append(pb_games, game)
+	}
+
+	response := &pb.GameResponse{
+		Result:  true,
+		Message: "game list",
+		Data:    pb_games,
 	}
 
 	return response, nil

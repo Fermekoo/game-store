@@ -26,6 +26,7 @@ type GameStoreClient interface {
 	Order(ctx context.Context, in *OrderCallRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	Profile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ProfileResponse, error)
 	Service(ctx context.Context, in *ServiceRequest, opts ...grpc.CallOption) (*ServiceResponse, error)
+	Game(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GameResponse, error)
 }
 
 type gameStoreClient struct {
@@ -63,6 +64,15 @@ func (c *gameStoreClient) Service(ctx context.Context, in *ServiceRequest, opts 
 	return out, nil
 }
 
+func (c *gameStoreClient) Game(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GameResponse, error) {
+	out := new(GameResponse)
+	err := c.cc.Invoke(ctx, "/pb.GameStore/Game", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameStoreServer is the server API for GameStore service.
 // All implementations must embed UnimplementedGameStoreServer
 // for forward compatibility
@@ -70,6 +80,7 @@ type GameStoreServer interface {
 	Order(context.Context, *OrderCallRequest) (*OrderResponse, error)
 	Profile(context.Context, *emptypb.Empty) (*ProfileResponse, error)
 	Service(context.Context, *ServiceRequest) (*ServiceResponse, error)
+	Game(context.Context, *emptypb.Empty) (*GameResponse, error)
 	mustEmbedUnimplementedGameStoreServer()
 }
 
@@ -85,6 +96,9 @@ func (UnimplementedGameStoreServer) Profile(context.Context, *emptypb.Empty) (*P
 }
 func (UnimplementedGameStoreServer) Service(context.Context, *ServiceRequest) (*ServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Service not implemented")
+}
+func (UnimplementedGameStoreServer) Game(context.Context, *emptypb.Empty) (*GameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Game not implemented")
 }
 func (UnimplementedGameStoreServer) mustEmbedUnimplementedGameStoreServer() {}
 
@@ -153,6 +167,24 @@ func _GameStore_Service_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GameStore_Game_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameStoreServer).Game(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.GameStore/Game",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameStoreServer).Game(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GameStore_ServiceDesc is the grpc.ServiceDesc for GameStore service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -171,6 +203,10 @@ var GameStore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Service",
 			Handler:    _GameStore_Service_Handler,
+		},
+		{
+			MethodName: "Game",
+			Handler:    _GameStore_Game_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

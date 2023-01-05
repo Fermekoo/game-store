@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/Fermekoo/game-store/pb";
+
+message Game {
+    string name = 1;
+}

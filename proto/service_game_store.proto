@@ -5,6 +5,7 @@ package pb;
 import "rpc_create_order.proto";
 import "rpc_get_profile.proto";
 import "rpc_get_service.proto";
+import "rpc_get_game.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "github.com/Fermekoo/game-store/pb";
@@ -13,4 +14,5 @@ service GameStore {
     rpc Order (OrderCallRequest) returns (OrderResponse) {}
     rpc Profile (google.protobuf.Empty) returns (ProfileResponse) {}
     rpc Service (ServiceRequest) returns (ServiceResponse) {}
+    rpc Game (google.protobuf.Empty) returns (GameResponse) {}
 }
