@@ -13,5 +13,7 @@ message OrderCallRequest {
 }
 
 message OrderResponse {
-    Order order = 1;
+    bool result = 1;
+    string message = 2;
+    Order data = 3;
 }

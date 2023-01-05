@@ -8,6 +8,7 @@ import (
 	"github.com/Fermekoo/game-store/repositories/order"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -50,6 +51,34 @@ func (server *Server) Order(ctx context.Context, request *pb.OrderCallRequest) (
 		UpdatedAt:   timestamppb.New(order.UpdatedAt),
 	}
 
-	response := &pb.OrderResponse{Order: pb_order}
+	response := &pb.OrderResponse{
+		Result:  true,
+		Message: "success create order",
+		Data:    pb_order,
+	}
+	return response, nil
+}
+
+func (server *Server) Profile(ctx context.Context, request *emptypb.Empty) (*pb.ProfileResponse, error) {
+	profile, err := server.service.Profile()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get profile %s", err)
+	}
+
+	pb_profile := &pb.Profile{
+		Fullname:   profile.Data.Fullname,
+		Username:   profile.Data.Username,
+		Balance:    profile.Data.Balance,
+		Point:      profile.Data.Balance,
+		Level:      profile.Data.Level,
+		Registered: profile.Data.Registered,
+	}
+
+	response := &pb.ProfileResponse{
+		Result:  profile.Result,
+		Message: profile.Message,
+		Data:    pb_profile,
+	}
+
 	return response, nil
 }

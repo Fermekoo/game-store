@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GameStoreClient interface {
 	Order(ctx context.Context, in *OrderCallRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	Profile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ProfileResponse, error)
 }
 
 type gameStoreClient struct {
@@ -42,11 +44,21 @@ func (c *gameStoreClient) Order(ctx context.Context, in *OrderCallRequest, opts 
 	return out, nil
 }
 
+func (c *gameStoreClient) Profile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ProfileResponse, error) {
+	out := new(ProfileResponse)
+	err := c.cc.Invoke(ctx, "/pb.GameStore/Profile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameStoreServer is the server API for GameStore service.
 // All implementations must embed UnimplementedGameStoreServer
 // for forward compatibility
 type GameStoreServer interface {
 	Order(context.Context, *OrderCallRequest) (*OrderResponse, error)
+	Profile(context.Context, *emptypb.Empty) (*ProfileResponse, error)
 	mustEmbedUnimplementedGameStoreServer()
 }
 
@@ -56,6 +68,9 @@ type UnimplementedGameStoreServer struct {
 
 func (UnimplementedGameStoreServer) Order(context.Context, *OrderCallRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Order not implemented")
+}
+func (UnimplementedGameStoreServer) Profile(context.Context, *emptypb.Empty) (*ProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Profile not implemented")
 }
 func (UnimplementedGameStoreServer) mustEmbedUnimplementedGameStoreServer() {}
 
@@ -88,6 +103,24 @@ func _GameStore_Order_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GameStore_Profile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameStoreServer).Profile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.GameStore/Profile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameStoreServer).Profile(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GameStore_ServiceDesc is the grpc.ServiceDesc for GameStore service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +131,10 @@ var GameStore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Order",
 			Handler:    _GameStore_Order_Handler,
+		},
+		{
+			MethodName: "Profile",
+			Handler:    _GameStore_Profile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
