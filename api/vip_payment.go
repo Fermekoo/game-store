@@ -1,9 +1,11 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Fermekoo/game-store/db"
+	"github.com/Fermekoo/game-store/payment"
 	"github.com/Fermekoo/game-store/pkg"
 	"github.com/Fermekoo/game-store/repositories/order"
 	"github.com/gin-gonic/gin"
@@ -52,7 +54,23 @@ func (server *Server) order(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, succesResponse(true, "success create order", order))
+	charge_payload := &payment.ChargeRequest{
+		PaymentType: "bank_transfer",
+		Bank:        request.PaymentMethod,
+		Amount:      int64(order.TotalPrice),
+		Phone:       request.Phone,
+		Name:        request.Name,
+		OrderID:     fmt.Sprint(order.ID),
+	}
+
+	charge, err := server.payment.Charge(charge_payload)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, succesResponse(true, "success create order", charge))
 }
 
 func (server *Server) services(ctx *gin.Context) {

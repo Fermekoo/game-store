@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Fermekoo/game-store/payment"
 	"github.com/Fermekoo/game-store/pkg"
 	"github.com/Fermekoo/game-store/utils"
 	"github.com/gin-contrib/cors"
@@ -19,12 +20,14 @@ type Server struct {
 	router  *gin.Engine
 	service pkg.ApiGameInterface
 	config  utils.Config
+	payment payment.Payment
 }
 
-func NewServer(service pkg.ApiGameInterface, config utils.Config) *Server {
+func NewServer(service pkg.ApiGameInterface, payment payment.Payment, config utils.Config) *Server {
 	server := &Server{
 		service: service,
 		config:  config,
+		payment: payment,
 	}
 	server.SetupRouter()
 	return server

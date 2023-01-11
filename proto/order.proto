@@ -15,6 +15,8 @@ message Order {
 	uint32 price = 6;
 	uint32 fee = 7;
 	string status = 8;
-	google.protobuf.Timestamp created_at = 9;
-	google.protobuf.Timestamp updated_at = 10;
+	string payment_code = 9;
+	string payment_url = 10;
+	google.protobuf.Timestamp created_at = 11;
+	google.protobuf.Timestamp updated_at = 12;
 }

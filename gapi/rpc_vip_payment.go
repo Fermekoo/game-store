@@ -2,8 +2,10 @@ package gapi
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Fermekoo/game-store/db"
+	"github.com/Fermekoo/game-store/payment"
 	"github.com/Fermekoo/game-store/pb"
 	"github.com/Fermekoo/game-store/pkg"
 	"github.com/Fermekoo/game-store/repositories/order"
@@ -39,6 +41,20 @@ func (server *Server) Order(ctx context.Context, request *pb.OrderCallRequest) (
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed create order %s", err)
 	}
+
+	charge_payload := &payment.ChargeRequest{
+		PaymentType: "bank_transfer",
+		Bank:        request.GetPaymentMethod(),
+		Amount:      int64(order.TotalPrice),
+		Phone:       request.GetPhone(),
+		Name:        request.GetName(),
+		OrderID:     fmt.Sprint(order.ID),
+	}
+	charge, err := server.payment.Charge(charge_payload)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create payment %s", err)
+	}
+
 	pb_order := &pb.Order{
 		OrderId:     uint32(order.ID),
 		AccountId:   order.AccountId,
@@ -50,6 +66,8 @@ func (server *Server) Order(ctx context.Context, request *pb.OrderCallRequest) (
 		Status:      order.Status,
 		CreatedAt:   timestamppb.New(order.CreatedAt),
 		UpdatedAt:   timestamppb.New(order.UpdatedAt),
+		PaymentCode: charge.PaymentCode,
+		PaymentUrl:  charge.PaymentUrl,
 	}
 
 	response := &pb.OrderResponse{

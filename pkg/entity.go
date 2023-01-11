@@ -26,9 +26,12 @@ type OrderCall struct {
 	AccountZone string `json:"account_zone"`
 }
 type OrderCallRequest struct {
-	ServiceCode string `json:"service" binding:"required"`
-	AccountID   string `json:"account_id" binding:"required"`
-	AccountZone string `json:"account_zone"`
+	ServiceCode   string `json:"service" binding:"required"`
+	AccountID     string `json:"account_id" binding:"required"`
+	AccountZone   string `json:"account_zone"`
+	PaymentMethod string `json:"payment_method"`
+	Phone         string `json:"phone"`
+	Name          string `json:"name"`
 }
 
 type OrderResponse struct {

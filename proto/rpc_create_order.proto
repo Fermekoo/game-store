@@ -10,6 +10,9 @@ message OrderCallRequest {
     string service = 1;
     string account_id = 2;
     string account_zone = 3;
+    string payment_method = 4;
+    string phone = 5;
+    string name = 6;
 }
 
 message OrderResponse {

@@ -7,6 +7,7 @@ import (
 
 	"github.com/Fermekoo/game-store/api"
 	"github.com/Fermekoo/game-store/gapi"
+	"github.com/Fermekoo/game-store/payment"
 	"github.com/Fermekoo/game-store/pb"
 	"github.com/Fermekoo/game-store/pkg"
 	"github.com/Fermekoo/game-store/utils"
@@ -21,18 +22,19 @@ func main() {
 	}
 
 	service := pkg.NewVIPPayment(config)
-	go RunGRPCServer(service, config)
-	RunHttpServer(service, config)
+	payment := payment.NewMidtrans(config)
+	go RunGRPCServer(service, payment, config)
+	RunHttpServer(service, payment, config)
 }
 
-func RunHttpServer(service pkg.ApiGameInterface, config utils.Config) {
-	server := api.NewServer(service, config)
+func RunHttpServer(service pkg.ApiGameInterface, payment payment.Payment, config utils.Config) {
+	server := api.NewServer(service, payment, config)
 	log.Printf("http server run on port %s", config.HTTPServerAddress)
 	server.Start(config.HTTPServerAddress, context.Background())
 }
 
-func RunGRPCServer(service pkg.ApiGameInterface, config utils.Config) {
-	server := gapi.NewServer(service, config)
+func RunGRPCServer(service pkg.ApiGameInterface, payment payment.Payment, config utils.Config) {
+	server := gapi.NewServer(service, payment, config)
 
 	gRPCServer := grpc.NewServer()
 	pb.RegisterGameStoreServer(gRPCServer, server)
